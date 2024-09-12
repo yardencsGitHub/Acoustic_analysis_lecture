@@ -1,3 +1,7 @@
+%% Lecture on analysis of acoustic behavior
+% Yarden Cohen, 2024
+% FFT, Parseval's theorem, and PSD
+
 %% load an audio file 
 % (here we also normalize the amplitude for presentation convenience)
 filepath = '/Users/Yardenc/Documents/GitHub/Acoustic_analysis_lecture/data/CanarySong1.wav';
@@ -14,6 +18,17 @@ y_highpass = highpass(y,500,samplerate,"StopbandAttenuation",40);
 figure; plot(dt:dt:numel(y_highpass)*dt,y_highpass);
 set(gca,'FontSize',16); xlabel('Time (sec)'); ylabel('Amplitude (au)'); title('Highpass-filtered acoustic signal');
 
+%% play a snippet of sound
+tlim = [12.0329   14.6405];
+tvec = dt:dt:numel(y_highpass)*dt;
+y_sample = y_highpass(tvec >= tlim(1) & tvec <= tlim(2));
+
+% play
+pl = audioplayer(y_sample,samplerate);
+play(pl);
+% save
+output_filename = '/Users/Yardenc/Documents/GitHub/Acoustic_analysis_lecture/data/CanarySong1_sippet.wav';
+audiowrite(output_filename,y_sample,samplerate);
 %% Calculate the power spectrum
 nfft = 2048;
 noverlap = 0;
@@ -21,7 +36,7 @@ win = hamming(nfft); %w = w/sum(w)*numel(w);
 % [Pxx,F] = pwelch(X,WINDOW,NOVERLAP,NFFT,Fs)
 [Pxx,W] = pwelch(y_highpass,win,noverlap,nfft,samplerate);
 figure; plot(W,Pxx);
-set(gca,'FontSize',16); xlabel('Frequency (Hz)'); ylabel('PSD (au^2)'); title('Highpass-filtered acoustic signal');
+set(gca,'FontSize',16); xlabel('Frequency (Hz)'); ylabel('PSD (au^2)/Hz'); title('Highpass-filtered acoustic signal');
 
 %% Parseval's theorem (fft example).
 N = 1000;
@@ -33,4 +48,5 @@ E2 = sum(abs(g).^2)/N
 %% Apply Parseval's theorem to our signal
 disp(['Mean power = mean(signal^2) = ' num2str(mean(y_highpass.^2))]);
 disp(['Sum of PSD = sum(PSD)*dF = ' num2str(sum(Pxx)*W(2))])
+
 
