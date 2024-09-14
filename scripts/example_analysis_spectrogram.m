@@ -45,7 +45,7 @@ set(gcf,'Position',[555   448   963   175])
 %% Calculate the power amplitude from the spectrogram
 Ampl = sum(abs(S));
 figure; plot(T,Ampl);
-set(gca,'FontSize',16); xlabel('Time (sec)'); ylabel('Amp (au^2\cdot Hz)');
+set(gca,'FontSize',16); xlabel('Time (sec)'); ylabel('Amp (au^2)');
 xlim([12.0329   14.6405]);
 set(gcf,'Position',[555   448   963   175]);
 %% Plot a variety of window shapes.
